@@ -1,0 +1,16 @@
+{
+  "name": "Охрана труда, нормирование и ХАССП",
+  "short_name": "Охрана труда",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#071633",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

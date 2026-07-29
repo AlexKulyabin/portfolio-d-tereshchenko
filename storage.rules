@@ -1,0 +1,35 @@
+rules_version = '2';
+
+// Правила доступа к файловому хранилищу.
+//
+// Здесь лежат две вещи: изображения сайта и файл public/content.json,
+// из которого публичный сайт читает контент. Оба должны свободно
+// читаться, но записывать их может только администратор.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // Опубликованный контент — его запрашивает каждый посетитель сайта.
+    match /public/content.json {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Изображения: фотографии эксперта, сканы документов, картинки страниц.
+    match /{folder}/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+      allow delete: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

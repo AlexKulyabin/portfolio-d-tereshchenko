@@ -1,0 +1,27 @@
+node_modules/
+dist/
+dist-ssr/
+.vite/
+
+# Ключи проекта — в репозиторий не попадают
+.env
+.env.local
+.env.*.local
+
+# Служебные файлы Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+*-debug.log
+
+# Снапшот контента создаётся при сборке
+src/content/snapshot.json
+
+.DS_Store
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+*.tsbuildinfo

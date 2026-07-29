@@ -1,0 +1,16 @@
+{
+  "indexes": [
+    {
+      "comment": "История публикаций сортируется по номеру версии",
+      "collectionGroup": "history",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "version",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

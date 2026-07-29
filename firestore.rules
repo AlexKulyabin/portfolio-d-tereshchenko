@@ -1,0 +1,60 @@
+rules_version = '2';
+
+// Правила доступа к базе данных.
+//
+// Принцип: запрещено всё, что не разрешено явно. Ключи Firebase на
+// клиенте не секретны, поэтому именно эти правила — единственная
+// настоящая защита данных.
+//
+// Права администратора выдаются через custom claim, а не списком почт
+// в коде: сменить состав администраторов можно без пересборки сайта.
+// Как выдать claim — см. docs/FIREBASE.md.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // Контент сайта. Публичный сайт читает не отсюда, а из файла в
+    // Storage, поэтому анонимного чтения здесь не нужно вовсе.
+    match /content/{document=**} {
+      allow read, write: if isAdmin();
+    }
+
+    // Заявки с формы обратной связи.
+    //
+    // Создавать может кто угодно — форма доступна анонимно. Читать,
+    // менять и удалять может только администратор: иначе персональные
+    // данные клиентов смог бы выгрузить любой желающий.
+    match /leads/{leadId} {
+      allow create: if isValidLead();
+      allow read, update, delete: if isAdmin();
+
+      // Поле service читается как data['service']: слово service
+      // зарезервировано языком правил, и через точку не разбирается.
+      // Условие consent == true означает, что без подтверждённого
+      // согласия заявка в базу не попадёт.
+      function isValidLead() {
+        let data = request.resource.data;
+        return data.keys().hasOnly([
+                 'name', 'phone', 'email', 'service', 'message',
+                 'consent', 'status', 'createdAt', 'page', 'campaign', 'userAgent'
+               ])
+               && data.name is string && data.name.size() >= 2 && data.name.size() <= 120
+               && data.phone is string && data.phone.size() >= 10 && data.phone.size() <= 30
+               && data.email is string && data.email.size() <= 120
+               && data.message is string && data.message.size() <= 2000
+               && data['service'] is string && data['service'].size() <= 120
+               && data.consent == true
+               && data.status == 'new';
+      }
+    }
+
+    // Всё остальное закрыто.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
