@@ -19,6 +19,9 @@
 | --- | --- |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Как устроен проект и почему принято именно так |
 | [FIREBASE.md](docs/FIREBASE.md) | Настройка Firebase с нуля и развёртывание |
+| [FIREBASE-PUBLICATION.md](docs/FIREBASE-PUBLICATION.md) | Подключение домена, права администратора и публикация контента |
+| [DOMAIN-REG-RU.md](docs/DOMAIN-REG-RU.md) | Инструкция заказчику: DNS-записи в Reg.ru |
+| [GMAIL-SMTP.md](docs/GMAIL-SMTP.md) | Уведомления о новых заявках на Gmail |
 | [ADMIN.md](docs/ADMIN.md) | Инструкция по админке — для заказчика, без терминов |
 | [LAUNCH.md](docs/LAUNCH.md) | Чек-лист запуска: домен, Метрика, Вебмастер, Директ |
 | [PERSONAL-DATA.md](docs/PERSONAL-DATA.md) | Персональные данные: что обязательно сделать |
@@ -76,7 +79,8 @@ curl -s -X POST "http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/account
 | `npm run preview` | Локальный просмотр собранного сайта |
 | `npm run typecheck` | Проверка типов |
 | `npm run emulators` | Локальные Firebase-эмуляторы |
-| `npm run deploy` | Сборка и публикация на Firebase Hosting |
+| `npm --prefix functions test` | Проверка формирования писем о заявках |
+| `npm run deploy` | Сборка и публикация сайта, правил и Functions на Firebase |
 
 ## Структура
 
@@ -97,11 +101,12 @@ src/
 └── styles/           Дизайн-система и шрифты
 
 scripts/              Выгрузка контента, пререндер, sitemap
+functions/            Cloud Function: письмо о новой заявке через Gmail SMTP
 docs/                 Документация
 ```
 
 ## Технологии
 
 React 19, TypeScript, Tailwind CSS 4, Vite 8, React Router 7, Zod 4, Firebase
-(Hosting, Firestore, Authentication, Storage). Пререндер — собственный, около
-50 строк в `scripts/prerender.mjs`.
+(Hosting, Firestore, Authentication, Storage, Cloud Functions), Nodemailer / Gmail SMTP.
+Пререндер — собственный, около 50 строк в `scripts/prerender.mjs`.

@@ -130,7 +130,7 @@ export function Footer() {
                     className="flex items-center gap-3 transition-colors hover:text-accent-400"
                   >
                     <MessageCircle aria-hidden="true" className="size-4 shrink-0 text-accent-400" />
-                    WhatsApp
+                    WhatsApp*
                   </a>
                 </li>
               )}
@@ -144,15 +144,23 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-white/10 py-8 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {year} {legal.name || content.expert.name}
-            {legal.inn && ` · ИНН ${legal.inn}`}
-            {legal.ogrn && ` · ОГРН${legal.entityType === 'ip' ? 'ИП' : ''} ${legal.ogrn}`}
-          </p>
-          <p>
-            Информация на сайте не является публичной офертой. Цены уточняйте по телефону.
-          </p>
+        <div className="border-t border-white/10 py-8 text-xs text-white/50">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p>
+              © {year} {legal.name || content.expert.name}
+              {legal.inn && ` · ИНН ${legal.inn}`}
+              {legal.ogrn && ` · ОГРН${legal.entityType === 'ip' ? 'ИП' : ''} ${legal.ogrn}`}
+            </p>
+            <p>
+              Информация на сайте не является публичной офертой. Цены уточняйте по телефону.
+            </p>
+          </div>
+          {contacts.whatsapp && (
+            <p className="mt-5 max-w-2xl border-l border-accent-400/50 pl-3 text-[11px] leading-relaxed text-white/40">
+              * Принадлежит компании Meta* (признана экстремистской организацией, деятельность
+              на территории России запрещена)
+            </p>
+          )}
         </div>
       </Container>
     </footer>

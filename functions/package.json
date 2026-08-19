@@ -1,0 +1,17 @@
+{
+  "name": "portfolio-d-tereshchenko-functions",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Server-side notifications for the website",
+  "main": "index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "firebase-functions": "^7.3.2",
+    "nodemailer": "^9.0.5"
+  }
+}

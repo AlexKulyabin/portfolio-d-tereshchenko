@@ -37,7 +37,7 @@ export default function ContactsPage() {
     },
     contacts.whatsapp && {
       icon: MessageCircle,
-      label: 'WhatsApp',
+      label: 'WhatsApp*',
       value: contacts.phone || 'Написать',
       href: messengerHref(contacts.whatsapp, 'whatsapp'),
       onClick: () => trackGoal('click_whatsapp'),
