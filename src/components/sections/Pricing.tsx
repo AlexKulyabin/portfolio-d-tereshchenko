@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react'
-import type { ServicePackage } from '@/schemas/content'
+import type { Service } from '@/schemas/content'
 import { cn } from '@/lib/utils'
+import { serviceSeoCopy } from '@/lib/service-seo'
 import { ButtonLink } from '@/components/ui/Button'
 import { Container, Section, SectionHeader } from '@/components/ui/Section'
 import { Reveal } from '@/components/ui/Reveal'
@@ -11,16 +12,18 @@ import { Reveal } from '@/components/ui/Reveal'
  * Пока цена не заполнена в админке, вместо суммы показывается «по запросу»:
  * так блок не выглядит сломанным на этапе, когда цены ещё не согласованы.
  */
-export function Pricing({ packages }: { packages: ServicePackage[] }) {
+export function Pricing({ service }: { service: Service }) {
+  const { packages } = service
   if (packages.length === 0) return null
+  const copy = serviceSeoCopy[service.slug]
 
   return (
     <Section id="stoimost" tone="soft">
       <Container>
         <SectionHeader
           eyebrow="Стоимость"
-          title="Три пакета на выбор"
-          subtitle="Выберите подходящий вариант или обсудим индивидуальные условия под вашу задачу."
+          title={copy.pricingTitle}
+          subtitle={copy.pricingSubtitle}
           align="center"
         />
 

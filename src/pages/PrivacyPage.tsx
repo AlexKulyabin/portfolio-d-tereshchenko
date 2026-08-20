@@ -29,6 +29,7 @@ export default function PrivacyPage() {
         title="Политика обработки персональных данных"
         description="Политика в отношении обработки персональных данных пользователей сайта."
         path="/politika-konfidencialnosti"
+        noindex
       />
 
       <div className="bg-hero-gradient py-14 text-white sm:py-16">

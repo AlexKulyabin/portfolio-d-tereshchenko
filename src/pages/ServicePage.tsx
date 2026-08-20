@@ -2,7 +2,8 @@ import { Link, useParams } from 'react-router-dom'
 import { ArrowRight, ChevronRight, Phone } from 'lucide-react'
 import { useContent } from '@/lib/ContentProvider'
 import { findService } from '@/lib/content'
-import { breadcrumbSchema, faqSchema, serviceSchema } from '@/lib/schema-org'
+import { breadcrumbSchema, faqSchema, serviceSchema, webPageSchema } from '@/lib/schema-org'
+import { serviceSeoCopy } from '@/lib/service-seo'
 import { telHref } from '@/lib/utils'
 import { trackGoal } from '@/lib/metrika'
 import { Seo } from '@/components/Seo'
@@ -32,6 +33,7 @@ export default function ServicePage() {
 
   const schemas = [
     serviceSchema(content, service),
+    webPageSchema(content, `/${service.slug}`, service.seo.title, service.seo.description),
     faqSchema(service.faq),
     breadcrumbSchema(content.settings.siteUrl, [
       { name: 'Главная', path: '/' },
@@ -123,10 +125,10 @@ export default function ServicePage() {
       <WhySection service={service} />
       <IncludedSection service={service} />
       <DeliverablesSection service={service} />
-      <Pricing packages={service.packages} />
+      <Pricing service={service} />
       <TermsSection service={service} />
       <ExpertBlock compact />
-      <FaqSection items={service.faq} title={`Вопросы про ${service.shortTitle.toLowerCase()}`} tone="soft" />
+      <FaqSection items={service.faq} title={serviceSeoCopy[service.slug].faqTitle} tone="soft" />
       <CtaSection defaultService={service.title} />
     </>
   )

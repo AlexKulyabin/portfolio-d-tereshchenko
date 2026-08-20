@@ -19,6 +19,7 @@ export default function ConsentPage() {
         title="Согласие на обработку персональных данных"
         description="Условия согласия на обработку персональных данных, предоставляемых через форму обратной связи."
         path="/soglasie-na-obrabotku-dannyh"
+        noindex
       />
 
       <div className="bg-hero-gradient py-14 text-white sm:py-16">

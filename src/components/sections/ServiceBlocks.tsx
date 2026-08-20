@@ -1,6 +1,7 @@
 import { AlertTriangle, CalendarClock, Check, FileCheck2, MapPin, Scale } from 'lucide-react'
 import type { Service } from '@/schemas/content'
 import { getIcon } from '@/lib/icons'
+import { serviceSeoCopy } from '@/lib/service-seo'
 import { Container, Section, SectionHeader } from '@/components/ui/Section'
 import { Reveal } from '@/components/ui/Reveal'
 
@@ -69,14 +70,15 @@ export function WhySection({ service }: { service: Service }) {
 /** Что входит в работу. */
 export function IncludedSection({ service }: { service: Service }) {
   if (service.included.length === 0) return null
+  const copy = serviceSeoCopy[service.slug]
 
   return (
     <Section tone="soft">
       <Container>
         <SectionHeader
           eyebrow="Состав работ"
-          title="Что входит в услугу"
-          subtitle="Полный цикл: от обследования до готовых документов и объяснения, как ими пользоваться."
+          title={copy.includedTitle}
+          subtitle={copy.includedSubtitle}
         />
 
         <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -106,6 +108,7 @@ export function IncludedSection({ service }: { service: Service }) {
 /** Что клиент получает на руки — самый убедительный блок на странице. */
 export function DeliverablesSection({ service }: { service: Service }) {
   if (service.deliverables.length === 0) return null
+  const copy = serviceSeoCopy[service.slug]
 
   return (
     <Section tone="light">
@@ -114,8 +117,8 @@ export function DeliverablesSection({ service }: { service: Service }) {
           <div className="lg:col-span-5">
             <SectionHeader
               eyebrow="Результат"
-              title="Что вы получите"
-              subtitle="Готовый комплект документов, оформленный под ваше предприятие."
+              title={copy.deliverablesTitle}
+              subtitle={copy.deliverablesSubtitle}
             />
             <Reveal delay={80}>
               <div className="mt-8 flex items-center gap-4 rounded-2xl bg-brand-50 p-6">
@@ -155,6 +158,7 @@ export function DeliverablesSection({ service }: { service: Service }) {
  */
 export function TermsSection({ service }: { service: Service }) {
   const { terms } = service
+  const copy = serviceSeoCopy[service.slug]
 
   return (
     <Section tone="dark" className="relative overflow-hidden">
@@ -162,7 +166,7 @@ export function TermsSection({ service }: { service: Service }) {
       <Container className="relative">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-5">
-            <SectionHeader eyebrow="Сроки" tone="dark" title="Когда будет готово" />
+            <SectionHeader eyebrow="Сроки" tone="dark" title={copy.termsTitle} />
             {terms.note && <p className="mt-5 text-white/60">{terms.note}</p>}
           </div>
 

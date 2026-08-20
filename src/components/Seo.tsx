@@ -34,7 +34,7 @@ export function Seo({ title, description, path, ogImage, noindex, jsonLd }: SeoP
     { name: 'twitter:description', content: description },
   ]
 
-  if (noindex) meta.push({ name: 'robots', content: 'noindex, nofollow' })
+  if (noindex) meta.push({ name: 'robots', content: 'noindex, follow' })
   if (canonical) meta.push({ property: 'og:url', content: canonical })
   if (image) {
     meta.push({ property: 'og:image', content: image })

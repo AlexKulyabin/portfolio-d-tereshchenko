@@ -12,12 +12,15 @@ import { absoluteUrl } from './utils'
 export function organizationSchema(content: SiteContent): Record<string, unknown> {
   const { settings, expert } = content
   const url = settings.siteUrl
+  const organizationId = url ? `${url.replace(/\/$/, '')}#organization` : undefined
 
   return {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
+    ...(organizationId && { '@id': organizationId }),
     name: settings.siteName,
     url,
+    inLanguage: 'ru-RU',
     description: content.home.seo.description,
     ...(settings.contacts.phone && { telephone: settings.contacts.phone }),
     ...(settings.contacts.email && { email: settings.contacts.email }),
@@ -30,7 +33,12 @@ export function organizationSchema(content: SiteContent): Record<string, unknown
       },
     }),
     areaServed: { '@type': 'Country', name: 'Россия' },
-    founder: { '@type': 'Person', name: expert.name, jobTitle: expert.role },
+    founder: {
+      '@type': 'Person',
+      ...(url && { '@id': `${url.replace(/\/$/, '')}#expert` }),
+      name: expert.name,
+      jobTitle: expert.role,
+    },
     knowsAbout: [
       'Оценка профессиональных рисков',
       'Нормирование труда',
@@ -42,8 +50,57 @@ export function organizationSchema(content: SiteContent): Record<string, unknown
   }
 }
 
+/** Эксперт указан явно, чтобы поисковик мог связать статьи и услуги с автором. */
+export function personSchema(content: SiteContent): Record<string, unknown> {
+  const { settings, expert } = content
+  const url = settings.siteUrl
+  const imageUrl = expert.photo.url.startsWith('/placeholders/') ? '' : expert.photo.url
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    ...(url && { '@id': `${url.replace(/\/$/, '')}#expert` }),
+    name: expert.name,
+    jobTitle: expert.role,
+    ...(expert.bio && { description: expert.bio }),
+    ...(imageUrl && {
+      image: imageUrl.startsWith('http') ? imageUrl : absoluteUrl(url, imageUrl),
+    }),
+    ...(url && { url }),
+    knowsAbout: [
+      'Оценка профессиональных рисков',
+      'Нормирование труда',
+      'Система ХАССП',
+      'Охрана труда',
+      'Безопасность пищевой продукции',
+    ],
+  }
+}
+
+/** Сущность сайта помогает связать главную, услуги и организацию в едином графе данных. */
+export function websiteSchema(content: SiteContent): Record<string, unknown> {
+  const url = content.settings.siteUrl
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    ...(url && { '@id': `${url.replace(/\/$/, '')}#website` }),
+    name: content.settings.siteName,
+    ...(url && { url }),
+    inLanguage: 'ru-RU',
+    publisher: {
+      '@type': 'ProfessionalService',
+      ...(url && { '@id': `${url.replace(/\/$/, '')}#organization` }),
+      name: content.settings.siteName,
+    },
+  }
+}
+
 export function serviceSchema(content: SiteContent, service: Service): Record<string, unknown> {
   const { settings } = content
+  const organizationId = settings.siteUrl
+    ? `${settings.siteUrl.replace(/\/$/, '')}#organization`
+    : undefined
   const offers = service.packages
     .filter((pkg) => pkg.price)
     .map((pkg) => ({
@@ -63,6 +120,7 @@ export function serviceSchema(content: SiteContent, service: Service): Record<st
     url: settings.siteUrl ? absoluteUrl(settings.siteUrl, `/${service.slug}`) : undefined,
     provider: {
       '@type': 'ProfessionalService',
+      ...(organizationId && { '@id': organizationId }),
       name: settings.siteName,
       ...(settings.contacts.phone && { telephone: settings.contacts.phone }),
     },
@@ -70,6 +128,36 @@ export function serviceSchema(content: SiteContent, service: Service): Record<st
     ...(offers.length > 0 && {
       offers: { '@type': 'AggregateOffer', priceCurrency: 'RUB', offers },
     }),
+  }
+}
+
+export function webPageSchema(
+  content: SiteContent,
+  path: string,
+  title: string,
+  description: string,
+): Record<string, unknown> {
+  const url = content.settings.siteUrl ? absoluteUrl(content.settings.siteUrl, path) : undefined
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    ...(url && { '@id': `${url}#webpage`, url }),
+    name: title,
+    description,
+    inLanguage: 'ru-RU',
+    isPartOf: {
+      '@type': 'WebSite',
+      ...(content.settings.siteUrl && { '@id': `${content.settings.siteUrl.replace(/\/$/, '')}#website` }),
+      name: content.settings.siteName,
+    },
+    about: {
+      '@type': 'ProfessionalService',
+      ...(content.settings.siteUrl && {
+        '@id': `${content.settings.siteUrl.replace(/\/$/, '')}#organization`,
+      }),
+      name: content.settings.siteName,
+    },
   }
 }
 

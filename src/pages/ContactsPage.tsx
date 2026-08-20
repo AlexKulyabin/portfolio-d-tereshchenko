@@ -1,7 +1,7 @@
 import { Clock, Mail, MapPin, MessageCircle, Phone, Send } from 'lucide-react'
 import { useContent } from '@/lib/ContentProvider'
 import { messengerHref, telHref } from '@/lib/utils'
-import { organizationSchema } from '@/lib/schema-org'
+import { organizationSchema, personSchema, webPageSchema } from '@/lib/schema-org'
 import { trackGoal } from '@/lib/metrika'
 import { Seo } from '@/components/Seo'
 import { Container, Section } from '@/components/ui/Section'
@@ -60,7 +60,18 @@ export default function ContactsPage() {
           contacts.geography || 'Работаем по всей России'
         }.`}
         path="/kontakty"
-        jsonLd={[organizationSchema(content)]}
+        jsonLd={[
+          organizationSchema(content),
+          personSchema(content),
+          webPageSchema(
+            content,
+            '/kontakty',
+            `Контакты — ${content.settings.siteName}`,
+            `Связаться с экспертом по охране труда и пищевой безопасности. ${
+              contacts.geography || 'Работаем по всей России'
+            }.`,
+          ),
+        ]}
       />
 
       <div className="bg-hero-gradient py-16 text-white sm:py-20">

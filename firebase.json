@@ -6,11 +6,25 @@
     "trailingSlash": false,
     "rewrites": [
       {
-        "source": "**",
+        "source": "/admin",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/admin/**",
         "destination": "/index.html"
       }
     ],
     "headers": [
+      {
+        "comment": "HTML и чистые URL не кэшируем надолго: поисковики и посетители быстрее увидят новую версию страницы",
+        "source": "**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=0, must-revalidate"
+          }
+        ]
+      },
       {
         "comment": "Файлы с хешем в имени не меняются — кешируем на год",
         "source": "/assets/**",
@@ -31,16 +45,6 @@
           {
             "key": "Access-Control-Allow-Origin",
             "value": "*"
-          }
-        ]
-      },
-      {
-        "comment": "HTML всегда перепроверяем: иначе правки не доедут до посетителей",
-        "source": "**/*.html",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=0, must-revalidate"
           }
         ]
       },

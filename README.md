@@ -22,6 +22,7 @@
 | [FIREBASE-PUBLICATION.md](docs/FIREBASE-PUBLICATION.md) | Подключение домена, права администратора и публикация контента |
 | [DOMAIN-REG-RU.md](docs/DOMAIN-REG-RU.md) | Инструкция заказчику: DNS-записи в Reg.ru |
 | [GMAIL-SMTP.md](docs/GMAIL-SMTP.md) | Уведомления о новых заявках на Gmail |
+| [SEO.md](docs/SEO.md) | Карта запросов, AI-поиск, индексация и регулярное продвижение |
 | [ADMIN.md](docs/ADMIN.md) | Инструкция по админке — для заказчика, без терминов |
 | [LAUNCH.md](docs/LAUNCH.md) | Чек-лист запуска: домен, Метрика, Вебмастер, Директ |
 | [PERSONAL-DATA.md](docs/PERSONAL-DATA.md) | Персональные данные: что обязательно сделать |

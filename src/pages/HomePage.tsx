@@ -1,5 +1,5 @@
 import { useContent } from '@/lib/ContentProvider'
-import { faqSchema, organizationSchema } from '@/lib/schema-org'
+import { faqSchema, organizationSchema, personSchema, webPageSchema, websiteSchema } from '@/lib/schema-org'
 import { Seo } from '@/components/Seo'
 import { Hero } from '@/components/sections/Hero'
 import { ServicesGrid } from '@/components/sections/ServicesGrid'
@@ -15,7 +15,13 @@ export default function HomePage() {
   const content = useContent()
   const { home } = content
 
-  const schemas = [organizationSchema(content), faqSchema(home.faq.items)].filter(
+  const schemas = [
+    organizationSchema(content),
+    personSchema(content),
+    websiteSchema(content),
+    webPageSchema(content, '/', home.seo.title, home.seo.description),
+    faqSchema(home.faq.items),
+  ].filter(
     (schema): schema is Record<string, unknown> => schema !== null,
   )
 
