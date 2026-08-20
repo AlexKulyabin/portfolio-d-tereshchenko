@@ -4,10 +4,13 @@ import { getFirebaseAuth, isFirebaseConfigured } from '@/lib/firebase'
 
 type AuthState = {
   user: User | null
+  isAdmin: boolean
   loading: boolean
   error: string | null
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
+  sendPasswordReset: (email: string) => Promise<void>
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthState | null>(null)
@@ -25,13 +28,26 @@ function describeAuthError(code: string): string {
       return 'Нет связи с сервером. Проверьте интернет'
     case 'auth/invalid-email':
       return 'Проверьте адрес почты'
+    case 'auth/requires-recent-login':
+      return 'Для смены пароля подтвердите текущий пароль ещё раз'
+    case 'auth/weak-password':
+      return 'Выберите более надёжный пароль'
+    case 'auth/user-not-found':
+      return 'Учётная запись не найдена'
     default:
-      return 'Не удалось войти. Попробуйте ещё раз'
+      return 'Операцию не удалось выполнить. Попробуйте ещё раз'
+  }
+}
+
+function assertPassword(password: string) {
+  if (password.length < 12) {
+    throw new Error('Пароль должен содержать не менее 12 символов')
   }
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -52,9 +68,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           import('firebase/auth'),
         ])
         if (cancelled) return
-        unsubscribe = onAuthStateChanged(auth, (nextUser) => {
-          setUser(nextUser)
-          setLoading(false)
+        unsubscribe = onAuthStateChanged(auth, async (nextUser) => {
+          setLoading(true)
+          setError(null)
+
+          if (!nextUser) {
+            setUser(null)
+            setIsAdmin(false)
+            setLoading(false)
+            return
+          }
+
+          try {
+            const token = await nextUser.getIdTokenResult()
+            if (cancelled) return
+            setUser(nextUser)
+            setIsAdmin(token.claims.admin === true)
+          } catch (tokenError) {
+            if (cancelled) return
+            setUser(nextUser)
+            setIsAdmin(false)
+            setError(tokenError instanceof Error ? tokenError.message : 'Не удалось проверить права доступа')
+          } finally {
+            if (!cancelled) setLoading(false)
+          }
         })
       } catch (initError) {
         if (cancelled) return
@@ -91,7 +128,57 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await firebaseSignOut(auth)
   }
 
-  return <AuthContext value={{ user, loading, error, signIn, signOut }}>{children}</AuthContext>
+  const sendPasswordReset = async (email: string) => {
+    const [auth, { sendPasswordResetEmail }] = await Promise.all([
+      getFirebaseAuth(),
+      import('firebase/auth'),
+    ])
+    try {
+      auth.languageCode = 'ru'
+      await sendPasswordResetEmail(auth, email.trim())
+    } catch (resetError) {
+      const code = (resetError as { code?: string }).code ?? ''
+      // Не раскрываем, зарегистрирован ли конкретный адрес в админке.
+      if (code === 'auth/user-not-found') return
+      throw new Error(describeAuthError(code))
+    }
+  }
+
+  const changePassword = async (currentPassword: string, newPassword: string) => {
+    assertPassword(newPassword)
+    const [auth, { EmailAuthProvider, reauthenticateWithCredential, updatePassword }] = await Promise.all([
+      getFirebaseAuth(),
+      import('firebase/auth'),
+    ])
+    const currentUser = auth.currentUser
+    if (!currentUser?.email) throw new Error('Войдите в учётную запись заново')
+
+    try {
+      const credential = EmailAuthProvider.credential(currentUser.email, currentPassword)
+      await reauthenticateWithCredential(currentUser, credential)
+      await updatePassword(currentUser, newPassword)
+    } catch (passwordError) {
+      const code = (passwordError as { code?: string }).code ?? ''
+      throw new Error(describeAuthError(code))
+    }
+  }
+
+  return (
+    <AuthContext
+      value={{
+        user,
+        isAdmin,
+        loading,
+        error,
+        signIn,
+        signOut,
+        sendPasswordReset,
+        changePassword,
+      }}
+    >
+      {children}
+    </AuthContext>
+  )
 }
 
 export function useAuth(): AuthState {

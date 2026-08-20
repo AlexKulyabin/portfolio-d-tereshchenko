@@ -6,6 +6,7 @@ import {
   FileText,
   Home,
   Inbox,
+  KeyRound,
   Loader2,
   LogOut,
   Save,
@@ -175,6 +176,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
               <Inbox className="size-4" />
               Заявки
             </NavLink>
+            <NavLink to="/admin/access" className={linkClass}>
+              <KeyRound className="size-4" />
+              Пароль
+            </NavLink>
 
             <button
               onClick={async () => {
@@ -212,6 +217,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           { to: '/admin/home', icon: FileText, label: 'Главная' },
           { to: '/admin/settings', icon: Settings, label: 'Контакты' },
           { to: '/admin/leads', icon: Inbox, label: 'Заявки' },
+          { to: '/admin/access', icon: KeyRound, label: 'Пароль' },
         ].map((item) => (
           <NavLink
             key={item.to}

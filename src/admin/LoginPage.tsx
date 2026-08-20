@@ -3,11 +3,13 @@ import { Loader2, LockKeyhole } from 'lucide-react'
 import { useAuth } from './AuthProvider'
 
 export function LoginPage() {
-  const { signIn, error: authError } = useAuth()
+  const { signIn, sendPasswordReset, error: authError } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const [resetBusy, setResetBusy] = useState(false)
+  const [resetNotice, setResetNotice] = useState<string | null>(null)
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -19,6 +21,25 @@ export function LoginPage() {
       setError(signInError instanceof Error ? signInError.message : 'Не удалось войти')
     } finally {
       setBusy(false)
+    }
+  }
+
+  const resetPassword = async () => {
+    setError(null)
+    setResetNotice(null)
+    if (!email.trim()) {
+      setError('Сначала укажите почту')
+      return
+    }
+
+    setResetBusy(true)
+    try {
+      await sendPasswordReset(email)
+      setResetNotice('Если учётная запись существует, на эту почту отправлена ссылка для смены пароля.')
+    } catch (resetError) {
+      setError(resetError instanceof Error ? resetError.message : 'Не удалось отправить письмо')
+    } finally {
+      setResetBusy(false)
     }
   }
 
@@ -78,12 +99,20 @@ export function LoginPage() {
               {busy && <Loader2 className="size-4 animate-spin" />}
               {busy ? 'Вхожу…' : 'Войти'}
             </button>
+
+            <button
+              type="button"
+              onClick={() => void resetPassword()}
+              disabled={resetBusy || busy}
+              className="w-full text-center text-sm font-medium text-blue-700 transition-colors hover:text-blue-800 disabled:opacity-60"
+            >
+              {resetBusy ? 'Отправляю ссылку…' : 'Забыли пароль? Получить ссылку для смены'}
+            </button>
+            {resetNotice && <p className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{resetNotice}</p>}
           </form>
         </div>
 
-        <p className="mt-5 text-center text-xs text-slate-400">
-          Забыли пароль? Его можно сбросить в консоли Firebase.
-        </p>
+        <p className="mt-5 text-center text-xs text-slate-400">Доступ создаёт действующий администратор сайта.</p>
       </div>
     </div>
   )
