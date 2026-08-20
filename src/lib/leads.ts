@@ -1,6 +1,6 @@
 import type { LeadInput } from '@/schemas/content'
-import { getCampaignParams } from './metrika'
 import { getDb, isFirebaseConfigured } from './firebase'
+import { PERSONAL_DATA_CONSENT_VERSION } from './legal'
 
 /**
  * Отправка заявки.
@@ -9,8 +9,7 @@ import { getDb, isFirebaseConfigured } from './firebase'
  * анонимную запись в неё, но запрещают чтение и изменение — прочитать
  * список может только администратор из админки.
  *
- * Персональные данные хранятся в Firebase по решению заказчика.
- * Требования, которые это накладывает, описаны в docs/PERSONAL-DATA.md.
+ * В заявку попадает только информация, необходимая для ответа посетителю.
  */
 
 const SUBMIT_INTERVAL_KEY = 'lead-last-submit'
@@ -50,11 +49,10 @@ export async function submitLead(input: LeadInput, formOpenedAt: number): Promis
     service: input.service,
     message: input.message,
     consent: input.consent,
+    consentVersion: PERSONAL_DATA_CONSENT_VERSION,
     status: 'new',
     createdAt: serverTimestamp(),
     page: window.location.pathname,
-    campaign: getCampaignParams(),
-    userAgent: navigator.userAgent.slice(0, 300),
   })
 
   try {

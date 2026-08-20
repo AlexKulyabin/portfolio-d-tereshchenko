@@ -49,7 +49,8 @@ export function initMetrika(counterId: string): void {
     clickmap: true,
     trackLinks: true,
     accurateTrackBounce: true,
-    webvisor: true,
+    // Не записываем действия посетителей в Вебвизоре: на сайте есть форма с контактами.
+    webvisor: false,
   })
 }
 
@@ -64,43 +65,4 @@ export function trackPageView(url: string, referrer?: string): void {
 
 export function trackGoal(goal: MetrikaGoal, params?: Record<string, unknown>): void {
   if (loadedId) window.ym?.(loadedId, 'reachGoal', goal, params)
-}
-
-/**
- * Метки рекламной кампании и yclid сохраняем, чтобы вместе с заявкой
- * было видно, по какому объявлению пришёл клиент.
- */
-const CAMPAIGN_STORAGE_KEY = 'campaign-params'
-
-export type CampaignParams = Record<string, string>
-
-export function captureCampaignParams(): void {
-  if (typeof window === 'undefined') return
-
-  const params = new URLSearchParams(window.location.search)
-  const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid', 'gclid']
-  const captured: CampaignParams = {}
-
-  for (const key of keys) {
-    const value = params.get(key)
-    if (value) captured[key] = value.slice(0, 200)
-  }
-
-  if (Object.keys(captured).length === 0) return
-
-  try {
-    sessionStorage.setItem(CAMPAIGN_STORAGE_KEY, JSON.stringify(captured))
-  } catch {
-    // Приватный режим браузера может запрещать запись — не критично.
-  }
-}
-
-export function getCampaignParams(): CampaignParams {
-  if (typeof window === 'undefined') return {}
-  try {
-    const raw = sessionStorage.getItem(CAMPAIGN_STORAGE_KEY)
-    return raw ? (JSON.parse(raw) as CampaignParams) : {}
-  } catch {
-    return {}
-  }
 }

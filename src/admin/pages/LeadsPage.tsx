@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Download, Inbox, Loader2, Mail, Phone, RefreshCw } from 'lucide-react'
+import { Download, Inbox, Loader2, Mail, Phone, RefreshCw, Trash2 } from 'lucide-react'
 import { getDb } from '@/lib/firebase'
 import { cn } from '@/lib/utils'
 import { PageHeading } from '../components/EditorSection'
@@ -14,7 +14,6 @@ type Lead = {
   status: string
   createdAt: Date | null
   page: string
-  campaign: Record<string, string>
 }
 
 async function loadLeads(): Promise<Lead[]> {
@@ -38,14 +37,13 @@ async function loadLeads(): Promise<Lead[]> {
       status: (data.status as string) ?? 'new',
       createdAt: data.createdAt?.toDate?.() ?? null,
       page: (data.page as string) ?? '',
-      campaign: (data.campaign as Record<string, string>) ?? {},
     }
   })
 }
 
 function toCsv(leads: Lead[]): string {
   const escape = (value: string) => `"${value.replace(/"/g, '""')}"`
-  const header = ['Дата', 'Имя', 'Телефон', 'Почта', 'Услуга', 'Комментарий', 'Страница', 'Кампания']
+  const header = ['Дата', 'Имя', 'Телефон', 'Почта', 'Услуга', 'Комментарий', 'Страница']
 
   const rows = leads.map((lead) =>
     [
@@ -56,9 +54,6 @@ function toCsv(leads: Lead[]): string {
       lead.service,
       lead.message,
       lead.page,
-      Object.entries(lead.campaign)
-        .map(([key, value]) => `${key}=${value}`)
-        .join(' '),
     ]
       .map(escape)
       .join(';'),
@@ -72,6 +67,7 @@ export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const refresh = async () => {
     setLoading(true)
@@ -99,11 +95,26 @@ export default function LeadsPage() {
     URL.revokeObjectURL(url)
   }
 
+  const removeLead = async (lead: Lead) => {
+    if (!confirm(`Удалить заявку от ${lead.name || 'посетителя'}? Действие нельзя отменить.`)) return
+    setDeletingId(lead.id)
+    setError(null)
+    try {
+      const [db, { deleteDoc, doc }] = await Promise.all([getDb(), import('firebase/firestore')])
+      await deleteDoc(doc(db, 'leads', lead.id))
+      setLeads((current) => current.filter((item) => item.id !== lead.id))
+    } catch (deleteError) {
+      setError(deleteError instanceof Error ? deleteError.message : 'Не удалось удалить заявку')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   return (
     <>
       <PageHeading
         title="Заявки"
-        description="Обращения с формы обратной связи. Показаны последние 200."
+        description="Обращения с формы обратной связи. Показаны последние 200. Неактуальные заявки удаляются автоматически через 180 дней; удалить обращение раньше можно вручную."
       />
 
       <div className="mb-5 flex gap-3">
@@ -154,6 +165,15 @@ export default function LeadsPage() {
                 <p className="text-sm text-slate-400">
                   {lead.createdAt ? lead.createdAt.toLocaleString('ru-RU') : ''}
                 </p>
+                <button
+                  type="button"
+                  onClick={() => void removeLead(lead)}
+                  disabled={deletingId === lead.id}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 disabled:opacity-60"
+                >
+                  {deletingId === lead.id ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
+                  Удалить
+                </button>
               </div>
 
               <div className="mt-4 flex flex-wrap gap-4 text-sm">
@@ -183,13 +203,9 @@ export default function LeadsPage() {
                 </p>
               )}
 
-              {(lead.page || Object.keys(lead.campaign).length > 0) && (
+              {lead.page && (
                 <p className="mt-3 text-xs text-slate-400">
-                  {lead.page && `Страница: ${lead.page}`}
-                  {Object.keys(lead.campaign).length > 0 &&
-                    ` · ${Object.entries(lead.campaign)
-                      .map(([key, value]) => `${key}: ${value}`)
-                      .join(', ')}`}
+                  Страница: {lead.page}
                 </p>
               )}
             </li>

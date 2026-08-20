@@ -40,7 +40,7 @@ service cloud.firestore {
         let data = request.resource.data;
         return data.keys().hasOnly([
                  'name', 'phone', 'email', 'service', 'message',
-                 'consent', 'status', 'createdAt', 'page', 'campaign', 'userAgent'
+                 'consent', 'consentVersion', 'status', 'createdAt', 'page'
                ])
                && data.name is string && data.name.size() >= 2 && data.name.size() <= 120
                && data.phone is string && data.phone.size() >= 10 && data.phone.size() <= 30
@@ -48,6 +48,7 @@ service cloud.firestore {
                && data.message is string && data.message.size() <= 2000
                && data['service'] is string && data['service'].size() <= 120
                && data.consent == true
+               && data.consentVersion == '2026-08-20'
                && data.status == 'new';
       }
     }

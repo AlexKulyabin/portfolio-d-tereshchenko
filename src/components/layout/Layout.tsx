@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { ContentProvider, useContent } from '@/lib/ContentProvider'
-import { captureCampaignParams, initMetrika, trackPageView } from '@/lib/metrika'
+import { AnalyticsConsentProvider, useAnalyticsConsent } from '@/lib/AnalyticsConsentProvider'
+import { initMetrika, trackPageView } from '@/lib/metrika'
+import { CookieNotice } from '@/components/CookieNotice'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { MobileCta } from './MobileCta'
@@ -32,22 +34,19 @@ function ScrollToTop() {
  */
 function Analytics() {
   const { settings } = useContent()
+  const { consent } = useAnalyticsConsent()
   const location = useLocation()
   const previousPath = useRef<string | null>(null)
 
   useEffect(() => {
-    captureCampaignParams()
-  }, [])
-
-  useEffect(() => {
-    if (!settings.analytics.metrikaId) return
+    if (consent !== 'accepted' || !settings.analytics.metrikaId) return
 
     const schedule =
       typeof requestIdleCallback === 'function'
         ? requestIdleCallback
         : (cb: () => void) => setTimeout(cb, 1500)
     schedule(() => initMetrika(settings.analytics.metrikaId))
-  }, [settings.analytics.metrikaId])
+  }, [consent, settings.analytics.metrikaId])
 
   useEffect(() => {
     const url = location.pathname + location.search
@@ -63,17 +62,20 @@ function Analytics() {
 
 export function Layout() {
   return (
-    <ContentProvider>
-      <ScrollToTop />
-      <Analytics />
-      <div className="flex min-h-screen flex-col">
-        <Header />
-        <main className="flex-1 pb-20 lg:pb-0">
-          <Outlet />
-        </main>
-        <Footer />
-        <MobileCta />
-      </div>
-    </ContentProvider>
+    <AnalyticsConsentProvider>
+      <ContentProvider>
+        <ScrollToTop />
+        <Analytics />
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1 pb-20 lg:pb-0">
+            <Outlet />
+          </main>
+          <Footer />
+          <MobileCta />
+        </div>
+        <CookieNotice />
+      </ContentProvider>
+    </AnalyticsConsentProvider>
   )
 }

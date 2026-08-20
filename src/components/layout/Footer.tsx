@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, MessageCircle, Phone, Send } from 'lucide-react'
 import { useContent } from '@/lib/ContentProvider'
+import { useAnalyticsConsent } from '@/lib/AnalyticsConsentProvider'
 import { sortedServices } from '@/lib/content'
 import { messengerHref, telHref } from '@/lib/utils'
 import { trackGoal } from '@/lib/metrika'
@@ -9,6 +10,7 @@ import { Logo } from './Logo'
 
 export function Footer() {
   const content = useContent()
+  const { openPreferences } = useAnalyticsConsent()
   const services = sortedServices(content)
   const { contacts, legal } = content.settings
   const phoneLink = telHref(contacts.phoneRaw, contacts.phone)
@@ -64,6 +66,15 @@ export function Footer() {
                 >
                   Политика конфиденциальности
                 </Link>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={openPreferences}
+                  className="text-left transition-colors hover:text-accent-400"
+                >
+                  Настройки cookies
+                </button>
               </li>
               <li>
                 <Link

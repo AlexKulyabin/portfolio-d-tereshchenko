@@ -126,6 +126,8 @@ export const testimonialSchema = z.object({
   author: nonEmpty('Автор', 120),
   position: z.string().trim().max(160).default(''),
   company: z.string().trim().max(160).default(''),
+  /** Публикуем только отзыв с подтверждённой достоверностью и согласием автора. */
+  verified: z.boolean().default(false),
 })
 
 export const faqItemSchema = z.object({

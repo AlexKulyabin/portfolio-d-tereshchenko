@@ -142,9 +142,12 @@ export default function SettingsEditor() {
           </Field>
         </Grid>
 
-        <Field label="Адрес">
-          <TextInput value={settings.legal.address} onChange={(address) => patchLegal({ address })} />
-        </Field>
+          <Field
+            label="Адрес регистрации"
+            hint="Укажите полный адрес из ЕГРИП/ЕГРЮЛ: он выводится в реквизитах и документах о персональных данных"
+          >
+            <TextInput value={settings.legal.address} onChange={(address) => patchLegal({ address })} />
+          </Field>
       </EditorSection>
 
       <EditorSection

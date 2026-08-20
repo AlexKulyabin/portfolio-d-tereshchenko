@@ -1,6 +1,7 @@
 import { useDraftContent } from '../DraftProvider'
 import { EditorSection, Grid, PageHeading } from '../components/EditorSection'
 import {
+  Checkbox,
   Field,
   IconSelect,
   RepeatableList,
@@ -210,7 +211,7 @@ export default function HomeEditor() {
 
       <EditorSection
         title="Отзывы"
-        description="Если отзывов нет, блок не показывается — пустым он выглядит хуже, чем его отсутствие."
+        description="Публикуйте только реальные отзывы. Для показа отметьте, что достоверность текста и согласие автора на публикацию подтверждены."
       >
         <Field label="Заголовок блока">
           <TextInput
@@ -222,7 +223,7 @@ export default function HomeEditor() {
         <RepeatableList
           items={home.testimonials.items}
           onChange={(items) => patchHome('testimonials', { ...home.testimonials, items })}
-          create={() => ({ text: '', author: '', position: '', company: '' })}
+          create={() => ({ text: '', author: '', position: '', company: '', verified: false })}
           titleOf={(item) => item.author || item.company}
           addLabel="Добавить отзыв"
           max={20}
@@ -242,6 +243,11 @@ export default function HomeEditor() {
                   <TextInput value={item.company} onChange={(company) => patch({ company })} />
                 </Field>
               </Grid>
+              <Checkbox
+                checked={item.verified}
+                onChange={(verified) => patch({ verified })}
+                label="Достоверность отзыва и согласие автора на публикацию подтверждены"
+              />
             </>
           )}
         />

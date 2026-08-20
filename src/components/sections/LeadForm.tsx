@@ -162,6 +162,9 @@ export function LeadForm({ defaultService }: { defaultService?: string }) {
             className={cn(fieldClass, 'resize-y')}
             {...register('message')}
           />
+          <p className="mt-1.5 text-xs text-ink-500">
+            Не указывайте паспортные, банковские, медицинские и другие чувствительные данные.
+          </p>
         </div>
       </div>
 
@@ -179,22 +182,22 @@ export function LeadForm({ defaultService }: { defaultService?: string }) {
             {...register('consent')}
           />
           <span>
-            Я согласен на{' '}
+            Я даю согласие на{' '}
             <Link
               to="/soglasie-na-obrabotku-dannyh"
               className="text-brand-700 underline underline-offset-2"
             >
               обработку персональных данных
-            </Link>{' '}
-            и ознакомлен с{' '}
-            <Link
-              to="/politika-konfidencialnosti"
-              className="text-brand-700 underline underline-offset-2"
-            >
-              политикой конфиденциальности
             </Link>
           </span>
         </label>
+        <p className="mt-2 pl-8 text-xs text-ink-500">
+          Условия обработки и порядок отзыва согласия указаны в{' '}
+          <Link to="/politika-konfidencialnosti" className="text-brand-700 underline underline-offset-2">
+            политике обработки персональных данных
+          </Link>
+          .
+        </p>
         {errors.consent && <p className={errorClass}>{errors.consent.message}</p>}
       </div>
 
@@ -209,9 +212,7 @@ export function LeadForm({ defaultService }: { defaultService?: string }) {
         {status === 'sending' ? 'Отправляю…' : 'Отправить заявку'}
       </Button>
 
-      <p className="mt-4 text-xs text-ink-400">
-        {content.cta.consentText || 'Не передаю контакты третьим лицам и не рассылаю рекламу.'}
-      </p>
+      <p className="mt-4 text-xs text-ink-400">Используем контакты только для ответа на обращение, без рекламных рассылок.</p>
     </form>
   )
 }

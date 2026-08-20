@@ -211,6 +211,7 @@ export const defaultContent: SiteContent = {
           author: 'Ольга Соколова',
           position: 'директор пекарни',
           company: '«Хлебный дом»',
+          verified: false,
         },
         {
           text:
@@ -220,6 +221,7 @@ export const defaultContent: SiteContent = {
           author: 'Андрей Волков',
           position: 'руководитель производства',
           company: 'ООО «МеталлСтройПром»',
+          verified: false,
         },
         {
           text:
@@ -229,6 +231,7 @@ export const defaultContent: SiteContent = {
           author: 'Марина Гусева',
           position: 'HR-директор',
           company: 'логистическая компания «ТрансКруг»',
+          verified: false,
         },
       ],
     },

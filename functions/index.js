@@ -1,12 +1,53 @@
 const { logger } = require('firebase-functions')
 const { onDocumentCreated } = require('firebase-functions/v2/firestore')
+const { onSchedule } = require('firebase-functions/v2/scheduler')
 const { defineSecret } = require('firebase-functions/params')
+const { getApps, initializeApp } = require('firebase-admin/app')
+const { getFirestore, Timestamp } = require('firebase-admin/firestore')
 const nodemailer = require('nodemailer')
 const { buildLeadEmail } = require('./lead-email')
 
 // Значения хранятся в Secret Manager, а не в коде или .env-файле.
 const gmailUser = defineSecret('GMAIL_SMTP_USER')
 const gmailAppPassword = defineSecret('GMAIL_SMTP_APP_PASSWORD')
+const leadRetentionDays = 180
+
+if (!getApps().length) initializeApp()
+
+/** Удаляет обращения, по которым не был заключён договор, по истечении срока хранения. */
+exports.deleteExpiredLeads = onSchedule(
+  {
+    schedule: 'every day 03:30',
+    timeZone: 'Europe/Moscow',
+    region: 'europe-west1',
+    memory: '256MiB',
+    timeoutSeconds: 120,
+  },
+  async () => {
+    const cutoff = Timestamp.fromDate(new Date(Date.now() - leadRetentionDays * 24 * 60 * 60 * 1000))
+    const db = getFirestore()
+    let deleted = 0
+
+    // Удаляем пачками: лимит предотвращает длительные транзакции и неограниченную нагрузку.
+    while (true) {
+      const stale = await db
+        .collection('leads')
+        .where('createdAt', '<', cutoff)
+        .orderBy('createdAt')
+        .limit(200)
+        .get()
+      if (stale.empty) break
+
+      const batch = db.batch()
+      stale.docs.forEach((entry) => batch.delete(entry.ref))
+      await batch.commit()
+      deleted += stale.size
+      if (stale.size < 200) break
+    }
+
+    logger.info('Expired leads deleted', { deleted, retentionDays: leadRetentionDays })
+  },
+)
 
 /**
  * Отправляет письмо при появлении новой заявки.
