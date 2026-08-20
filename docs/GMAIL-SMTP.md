@@ -40,8 +40,8 @@ firebase functions:secrets:set GMAIL_SMTP_APP_PASSWORD
 firebase deploy --only functions:sendLeadEmail
 ```
 
-В `GMAIL_SMTP_USER` укажите полный адрес Gmail-ящика, например
-`expert.auditor.notifications@gmail.com`. В `GMAIL_SMTP_APP_PASSWORD` — 16-значный пароль
+В `GMAIL_SMTP_USER` укажите подключённый ящик
+`dimon.style1994@gmail.com`. В `GMAIL_SMTP_APP_PASSWORD` — 16-значный пароль
 приложения, полученный на предыдущем шаге; пробелы можно не вводить.
 
 Функция запускается только при создании новой заявки в Firestore (`leads/{leadId}`).
