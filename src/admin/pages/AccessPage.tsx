@@ -11,11 +11,13 @@ function PasswordField({
   label,
   value,
   autoComplete,
+  minLength,
   onChange,
 }: {
   label: string
   value: string
   autoComplete: string
+  minLength?: number
   onChange: (value: string) => void
 }) {
   return (
@@ -25,7 +27,7 @@ function PasswordField({
         type="password"
         value={value}
         autoComplete={autoComplete}
-        minLength={12}
+        minLength={minLength}
         required
         onChange={(event) => onChange(event.target.value)}
         className={inputClass}
@@ -88,12 +90,14 @@ export default function AccessPage() {
             label="Новый пароль"
             value={newPassword}
             autoComplete="new-password"
+            minLength={12}
             onChange={setNewPassword}
           />
           <PasswordField
             label="Повторите новый пароль"
             value={newPasswordRepeat}
             autoComplete="new-password"
+            minLength={12}
             onChange={setNewPasswordRepeat}
           />
           <p className="text-xs text-slate-500">Минимум 12 символов. Не используйте пароль от почты.</p>
