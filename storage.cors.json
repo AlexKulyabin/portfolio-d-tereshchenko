@@ -1,0 +1,13 @@
+[
+  {
+    "origin": [
+      "https://expert-auditor.com",
+      "https://www.expert-auditor.com",
+      "https://website-df769.web.app",
+      "http://localhost:5173"
+    ],
+    "method": ["GET", "HEAD"],
+    "responseHeader": ["Content-Type", "Cache-Control"],
+    "maxAgeSeconds": 3600
+  }
+]
