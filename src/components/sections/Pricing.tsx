@@ -2,6 +2,7 @@ import { Check } from 'lucide-react'
 import type { Service } from '@/schemas/content'
 import { cn } from '@/lib/utils'
 import { serviceSeoCopy } from '@/lib/service-seo'
+import { rememberLeadContext, trackGoal } from '@/lib/metrika'
 import { ButtonLink } from '@/components/ui/Button'
 import { Container, Section, SectionHeader } from '@/components/ui/Section'
 import { Reveal } from '@/components/ui/Reveal'
@@ -124,6 +125,15 @@ export function Pricing({ service }: { service: Service }) {
                   to="#zayavka"
                   variant={pkg.highlighted ? 'light' : 'secondary'}
                   className="mt-7 w-full"
+                  onClick={() => {
+                    rememberLeadContext(service.slug, 'pricing', pkg.name)
+                    trackGoal('package_select', {
+                      service: service.slug,
+                      placement: 'pricing',
+                      package: pkg.name,
+                      package_index: index + 1,
+                    })
+                  }}
                 >
                   Выбрать пакет
                 </ButtonLink>

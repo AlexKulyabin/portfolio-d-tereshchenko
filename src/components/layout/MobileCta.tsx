@@ -23,7 +23,7 @@ export function MobileCta() {
         {phoneLink && (
           <a
             href={phoneLink}
-            onClick={() => trackGoal('click_phone')}
+            onClick={() => trackGoal('click_phone', { placement: 'mobile_bar' })}
             className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-brand-700 font-medium text-white"
           >
             <Phone aria-hidden="true" className="size-5" />
@@ -35,7 +35,7 @@ export function MobileCta() {
             href={telegramLink}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => trackGoal('click_telegram')}
+            onClick={() => trackGoal('click_telegram', { placement: 'mobile_bar' })}
             aria-label="Написать в Telegram"
             className="flex size-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700"
           >

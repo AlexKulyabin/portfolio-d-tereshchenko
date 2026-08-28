@@ -4,6 +4,7 @@ import { Seo } from '@/components/Seo'
 import { ButtonLink } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Section'
 import { Link } from 'react-router-dom'
+import { trackGoal } from '@/lib/metrika'
 
 export default function NotFoundPage() {
   const content = useContent()
@@ -38,6 +39,12 @@ export default function NotFoundPage() {
               <li key={service.slug}>
                 <Link
                   to={`/${service.slug}`}
+                  onClick={() =>
+                    trackGoal('service_open', {
+                      service: service.slug,
+                      placement: 'not_found',
+                    })
+                  }
                   className="inline-flex rounded-xl bg-white/5 px-5 py-3 text-[0.95rem] text-white/80 ring-1 ring-white/10 transition-colors hover:bg-white/10 hover:text-white"
                 >
                   {service.shortTitle}

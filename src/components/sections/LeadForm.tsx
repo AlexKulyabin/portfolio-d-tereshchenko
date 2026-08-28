@@ -6,7 +6,13 @@ import { leadSchema, type LeadInput } from '@/schemas/content'
 import { useContent } from '@/lib/ContentProvider'
 import { sortedServices } from '@/lib/content'
 import { LeadError, submitLead } from '@/lib/leads'
-import { trackGoal } from '@/lib/metrika'
+import {
+  clearLeadContext,
+  readLeadContext,
+  serviceFromPath,
+  trackGoal,
+  type AnalyticsService,
+} from '@/lib/metrika'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 
@@ -23,6 +29,7 @@ export function LeadForm({ defaultService }: { defaultService?: string }) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle')
   const [submitError, setSubmitError] = useState<string | null>(null)
   const openedAt = useRef(Date.now())
+  const formStartTracked = useRef(false)
 
   const {
     register,
@@ -42,8 +49,32 @@ export function LeadForm({ defaultService }: { defaultService?: string }) {
   })
 
   useEffect(() => {
-    if (defaultService) setValue('service', defaultService)
-  }, [defaultService, setValue])
+    if (defaultService) {
+      setValue('service', defaultService)
+      return
+    }
+
+    const remembered = readLeadContext()
+    const rememberedService = content.services.find((service) => service.slug === remembered?.service)
+    if (rememberedService) setValue('service', rememberedService.title)
+  }, [content.services, defaultService, setValue])
+
+  const analyticsServiceFor = (selectedService: string): AnalyticsService => {
+    if (selectedService === 'Несколько услуг') return 'multiple'
+    return services.find((service) => service.title === selectedService)?.slug ?? 'general'
+  }
+
+  const trackFormStart = () => {
+    if (formStartTracked.current) return
+    formStartTracked.current = true
+
+    const remembered = readLeadContext()
+    trackGoal('form_start', {
+      service: remembered?.service ?? serviceFromPath(),
+      placement: remembered?.placement ?? 'lead_form',
+      package: remembered?.packageName,
+    })
+  }
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError(null)
@@ -57,7 +88,14 @@ export function LeadForm({ defaultService }: { defaultService?: string }) {
     setStatus('sending')
     try {
       await submitLead(parsed.data, openedAt.current)
-      trackGoal('form_submit', { service: parsed.data.service })
+      const service = analyticsServiceFor(parsed.data.service)
+      const remembered = readLeadContext()
+      trackGoal('form_submit', {
+        service,
+        placement: remembered?.placement ?? 'lead_form',
+        package: remembered?.service === service ? remembered.packageName : undefined,
+      })
+      clearLeadContext()
       setStatus('sent')
       reset()
     } catch (error) {
@@ -78,7 +116,15 @@ export function LeadForm({ defaultService }: { defaultService?: string }) {
         <p className="mx-auto mt-3 max-w-md text-ink-600">
           Свяжусь с вами в ближайшее рабочее время, уточню детали и назову точную стоимость.
         </p>
-        <Button variant="secondary" className="mt-6" onClick={() => setStatus('idle')}>
+        <Button
+          variant="secondary"
+          className="mt-6"
+          onClick={() => {
+            openedAt.current = Date.now()
+            formStartTracked.current = false
+            setStatus('idle')
+          }}
+        >
           Отправить ещё одну заявку
         </Button>
       </div>
@@ -86,7 +132,12 @@ export function LeadForm({ defaultService }: { defaultService?: string }) {
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="rounded-2xl bg-white p-6 ring-1 ring-line sm:p-8">
+    <form
+      onSubmit={onSubmit}
+      onFocusCapture={trackFormStart}
+      noValidate
+      className="rounded-2xl bg-white p-6 ring-1 ring-line sm:p-8"
+    >
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="lead-name" className={labelClass}>

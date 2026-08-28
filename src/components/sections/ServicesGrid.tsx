@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { useContent } from '@/lib/ContentProvider'
 import { sortedServices } from '@/lib/content'
 import { getIcon } from '@/lib/icons'
+import { trackGoal } from '@/lib/metrika'
 import { Container, Section, SectionHeader } from '@/components/ui/Section'
 import { Reveal } from '@/components/ui/Reveal'
 
@@ -27,6 +28,12 @@ export function ServicesGrid() {
               <Reveal key={service.slug} as="li" delay={index * 70} className="h-full">
                 <Link
                   to={`/${service.slug}`}
+                  onClick={() =>
+                    trackGoal('service_open', {
+                      service: service.slug,
+                      placement: 'services_grid',
+                    })
+                  }
                   className="group flex h-full flex-col rounded-2xl bg-white p-7 ring-1 ring-line transition-all duration-300 hover:-translate-y-1 hover:ring-brand-300 hover:shadow-[var(--shadow-card-hover)]"
                 >
                   <span

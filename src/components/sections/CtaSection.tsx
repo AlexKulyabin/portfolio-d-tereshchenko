@@ -31,7 +31,7 @@ export function CtaSection({ defaultService }: { defaultService?: string }) {
                 {phoneLink && (
                   <a
                     href={phoneLink}
-                    onClick={() => trackGoal('click_phone')}
+                    onClick={() => trackGoal('click_phone', { placement: 'cta_block' })}
                     className="flex items-center gap-4 rounded-xl bg-white/5 px-5 py-4 ring-1 ring-white/10 transition-colors hover:bg-white/10"
                   >
                     <Phone aria-hidden="true" className="size-5 shrink-0 text-accent-400" />
@@ -43,7 +43,7 @@ export function CtaSection({ defaultService }: { defaultService?: string }) {
                 {contacts.email && (
                   <a
                     href={`mailto:${contacts.email}`}
-                    onClick={() => trackGoal('click_email')}
+                    onClick={() => trackGoal('click_email', { placement: 'cta_block' })}
                     className="flex items-center gap-4 rounded-xl bg-white/5 px-5 py-4 text-white/80 ring-1 ring-white/10 transition-colors hover:bg-white/10"
                   >
                     <Mail aria-hidden="true" className="size-5 shrink-0 text-accent-400" />
@@ -56,7 +56,7 @@ export function CtaSection({ defaultService }: { defaultService?: string }) {
                       href={messengerHref(contacts.telegram, 'telegram')}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => trackGoal('click_telegram')}
+                      onClick={() => trackGoal('click_telegram', { placement: 'cta_block' })}
                       className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white/5 px-5 py-4 text-white/80 ring-1 ring-white/10 transition-colors hover:bg-white/10"
                     >
                       <Send aria-hidden="true" className="size-5 text-accent-400" />
@@ -68,7 +68,7 @@ export function CtaSection({ defaultService }: { defaultService?: string }) {
                       href={messengerHref(contacts.whatsapp, 'whatsapp')}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => trackGoal('click_whatsapp')}
+                      onClick={() => trackGoal('click_whatsapp', { placement: 'cta_block' })}
                       className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white/5 px-5 py-4 text-white/80 ring-1 ring-white/10 transition-colors hover:bg-white/10"
                     >
                       <MessageCircle aria-hidden="true" className="size-5 text-accent-400" />

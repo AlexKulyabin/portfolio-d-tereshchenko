@@ -5,7 +5,7 @@ import { findService } from '@/lib/content'
 import { breadcrumbSchema, faqSchema, serviceSchema, webPageSchema } from '@/lib/schema-org'
 import { serviceSeoCopy } from '@/lib/service-seo'
 import { telHref } from '@/lib/utils'
-import { trackGoal } from '@/lib/metrika'
+import { rememberLeadContext, trackGoal } from '@/lib/metrika'
 import { Seo } from '@/components/Seo'
 import { ButtonLink } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Section'
@@ -78,7 +78,18 @@ export default function ServicePage() {
               )}
 
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <ButtonLink to="#zayavka" size="lg" variant="light">
+                <ButtonLink
+                  to="#zayavka"
+                  size="lg"
+                  variant="light"
+                  onClick={() => {
+                    rememberLeadContext(service.slug, 'hero_service')
+                    trackGoal('cta_click', {
+                      service: service.slug,
+                      placement: 'hero_service',
+                    })
+                  }}
+                >
                   Получить расчёт
                   <ArrowRight aria-hidden="true" className="size-5" />
                 </ButtonLink>
@@ -87,7 +98,7 @@ export default function ServicePage() {
                     to={phoneLink}
                     size="lg"
                     variant="ghost"
-                    onClick={() => trackGoal('click_phone')}
+                    onClick={() => trackGoal('click_phone', { placement: 'hero_service' })}
                   >
                     <Phone aria-hidden="true" className="size-5" />
                     {contacts.phone}

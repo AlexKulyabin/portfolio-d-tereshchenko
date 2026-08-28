@@ -36,7 +36,16 @@ export function Footer() {
             <ul className="mt-5 space-y-3 text-sm">
               {services.map((service) => (
                 <li key={service.slug}>
-                  <Link to={`/${service.slug}`} className="transition-colors hover:text-accent-400">
+                  <Link
+                    to={`/${service.slug}`}
+                    onClick={() =>
+                      trackGoal('service_open', {
+                        service: service.slug,
+                        placement: 'footer',
+                      })
+                    }
+                    className="transition-colors hover:text-accent-400"
+                  >
                     {service.title}
                   </Link>
                 </li>
@@ -97,7 +106,7 @@ export function Footer() {
                 <li>
                   <a
                     href={phoneLink}
-                    onClick={() => trackGoal('click_phone')}
+                    onClick={() => trackGoal('click_phone', { placement: 'footer' })}
                     className="flex items-center gap-3 text-base font-medium text-white transition-colors hover:text-accent-400"
                   >
                     <Phone aria-hidden="true" className="size-4 shrink-0 text-accent-400" />
@@ -109,7 +118,7 @@ export function Footer() {
                 <li>
                   <a
                     href={`mailto:${contacts.email}`}
-                    onClick={() => trackGoal('click_email')}
+                    onClick={() => trackGoal('click_email', { placement: 'footer' })}
                     className="flex items-center gap-3 transition-colors hover:text-accent-400"
                   >
                     <Mail aria-hidden="true" className="size-4 shrink-0 text-accent-400" />
@@ -123,7 +132,7 @@ export function Footer() {
                     href={messengerHref(contacts.telegram, 'telegram')}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() => trackGoal('click_telegram')}
+                    onClick={() => trackGoal('click_telegram', { placement: 'footer' })}
                     className="flex items-center gap-3 transition-colors hover:text-accent-400"
                   >
                     <Send aria-hidden="true" className="size-4 shrink-0 text-accent-400" />
@@ -137,7 +146,7 @@ export function Footer() {
                     href={messengerHref(contacts.whatsapp, 'whatsapp')}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() => trackGoal('click_whatsapp')}
+                    onClick={() => trackGoal('click_whatsapp', { placement: 'footer' })}
                     className="flex items-center gap-3 transition-colors hover:text-accent-400"
                   >
                     <MessageCircle aria-hidden="true" className="size-4 shrink-0 text-accent-400" />

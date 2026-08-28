@@ -1,7 +1,7 @@
 import { ArrowRight, Phone } from 'lucide-react'
 import { useContent } from '@/lib/ContentProvider'
 import { telHref } from '@/lib/utils'
-import { trackGoal } from '@/lib/metrika'
+import { rememberLeadContext, trackGoal } from '@/lib/metrika'
 import { ButtonLink } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Section'
 
@@ -40,7 +40,15 @@ export function Hero() {
             )}
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink to="/#zayavka" size="lg" variant="light">
+              <ButtonLink
+                to="/#zayavka"
+                size="lg"
+                variant="light"
+                onClick={() => {
+                  rememberLeadContext('general', 'hero_home')
+                  trackGoal('cta_click', { service: 'general', placement: 'hero_home' })
+                }}
+              >
                 {hero.ctaPrimary || 'Получить расчёт'}
                 <ArrowRight aria-hidden="true" className="size-5" />
               </ButtonLink>
@@ -49,7 +57,7 @@ export function Hero() {
                   to={phoneLink}
                   size="lg"
                   variant="ghost"
-                  onClick={() => trackGoal('click_phone')}
+                  onClick={() => trackGoal('click_phone', { placement: 'hero_home' })}
                 >
                   <Phone aria-hidden="true" className="size-5" />
                   {contacts.phone || hero.ctaSecondary}

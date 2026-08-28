@@ -4,7 +4,7 @@ import { Mail, Menu, Phone, X } from 'lucide-react'
 import { useContent } from '@/lib/ContentProvider'
 import { sortedServices } from '@/lib/content'
 import { cn, telHref } from '@/lib/utils'
-import { trackGoal } from '@/lib/metrika'
+import { rememberLeadContext, serviceFromPath, trackGoal } from '@/lib/metrika'
 import { ButtonLink } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Section'
 import { Logo } from './Logo'
@@ -48,7 +48,7 @@ export function Header() {
               {contacts.email && (
                 <a
                   href={`mailto:${contacts.email}`}
-                  onClick={() => trackGoal('click_email')}
+                  onClick={() => trackGoal('click_email', { placement: 'header_desktop' })}
                   className="flex items-center gap-2 transition-colors hover:text-white"
                 >
                   <Mail aria-hidden="true" className="size-4" />
@@ -58,7 +58,7 @@ export function Header() {
               {phoneLink && (
                 <a
                   href={phoneLink}
-                  onClick={() => trackGoal('click_phone')}
+                  onClick={() => trackGoal('click_phone', { placement: 'header_desktop' })}
                   className="flex items-center gap-2 font-medium text-white transition-colors hover:text-accent-400"
                 >
                   <Phone aria-hidden="true" className="size-4" />
@@ -89,6 +89,12 @@ export function Header() {
                 <NavLink
                   key={service.slug}
                   to={`/${service.slug}`}
+                  onClick={() =>
+                    trackGoal('service_open', {
+                      service: service.slug,
+                      placement: 'header_desktop_nav',
+                    })
+                  }
                   className={({ isActive }) =>
                     cn(
                       'rounded-lg px-2.5 py-2 text-[0.9rem] font-medium whitespace-nowrap transition-colors xl:px-3 xl:text-[0.95rem]',
@@ -113,7 +119,16 @@ export function Header() {
             </nav>
 
             <div className="hidden lg:block">
-              <ButtonLink to="/#zayavka">Получить расчёт</ButtonLink>
+              <ButtonLink
+                to="/#zayavka"
+                onClick={() => {
+                  const service = serviceFromPath()
+                  rememberLeadContext(service, 'header_desktop')
+                  trackGoal('cta_click', { service, placement: 'header_desktop' })
+                }}
+              >
+                Получить расчёт
+              </ButtonLink>
             </div>
 
             <div className="flex items-center gap-2 lg:hidden">
@@ -121,7 +136,7 @@ export function Header() {
                 <a
                   href={phoneLink}
                   aria-label={`Позвонить по номеру ${contacts.phone}`}
-                  onClick={() => trackGoal('click_phone')}
+                  onClick={() => trackGoal('click_phone', { placement: 'header_mobile' })}
                   className="flex size-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700"
                 >
                   <Phone aria-hidden="true" className="size-5" />
@@ -154,6 +169,12 @@ export function Header() {
                 <Link
                   key={service.slug}
                   to={`/${service.slug}`}
+                  onClick={() =>
+                    trackGoal('service_open', {
+                      service: service.slug,
+                      placement: 'header_mobile_nav',
+                    })
+                  }
                   className="rounded-xl px-4 py-4 font-display text-lg font-semibold text-navy-900 transition-colors hover:bg-brand-50"
                 >
                   {service.shortTitle}
@@ -171,7 +192,7 @@ export function Header() {
               {phoneLink && (
                 <a
                   href={phoneLink}
-                  onClick={() => trackGoal('click_phone')}
+                  onClick={() => trackGoal('click_phone', { placement: 'header_mobile_menu' })}
                   className="flex items-center gap-3 px-4 py-2 text-lg font-medium text-navy-900"
                 >
                   <Phone aria-hidden="true" className="size-5 text-brand-700" />
@@ -181,14 +202,23 @@ export function Header() {
               {contacts.email && (
                 <a
                   href={`mailto:${contacts.email}`}
-                  onClick={() => trackGoal('click_email')}
+                  onClick={() => trackGoal('click_email', { placement: 'header_mobile_menu' })}
                   className="flex items-center gap-3 px-4 py-2 text-ink-600"
                 >
                   <Mail aria-hidden="true" className="size-5 text-brand-700" />
                   {contacts.email}
                 </a>
               )}
-              <ButtonLink to="/#zayavka" size="lg" className="w-full">
+              <ButtonLink
+                to="/#zayavka"
+                size="lg"
+                className="w-full"
+                onClick={() => {
+                  const service = serviceFromPath()
+                  rememberLeadContext(service, 'header_mobile_menu')
+                  trackGoal('cta_click', { service, placement: 'header_mobile_menu' })
+                }}
+              >
                 Получить расчёт
               </ButtonLink>
             </div>
