@@ -10,7 +10,7 @@ export function Advantages() {
   if (advantages.items.length === 0) return null
 
   return (
-    <Section tone="soft">
+    <Section analyticsId="advantages" tone="soft">
       <Container>
         <SectionHeader
           eyebrow="Подход к работе"

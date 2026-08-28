@@ -14,7 +14,7 @@ export function ExpertBlock({ compact = false }: { compact?: boolean }) {
   const { expert } = useContent()
 
   return (
-    <Section tone={compact ? 'light' : 'soft'} id="ob-ekspert">
+    <Section tone={compact ? 'light' : 'soft'} id="ob-ekspert" analyticsId="expert">
       <Container>
         <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-5">

@@ -16,6 +16,22 @@ const SERVICE_SLUGS = [
 
 export type AnalyticsService = (typeof SERVICE_SLUGS)[number] | 'general' | 'multiple'
 
+export type AnalyticsSection =
+  | 'services'
+  | 'advantages'
+  | 'expert'
+  | 'steps'
+  | 'industries'
+  | 'testimonials'
+  | 'faq'
+  | 'why'
+  | 'included'
+  | 'deliverables'
+  | 'pricing'
+  | 'terms'
+  | 'lead_form'
+  | 'contacts'
+
 export type AnalyticsPlacement =
   | 'header_desktop'
   | 'header_desktop_nav'
@@ -56,6 +72,7 @@ export type MetrikaGoal =
   | 'cta_click'
   | 'package_select'
   | 'form_start'
+  | 'section_view'
 
 /** Определяет направление по текущему адресу страницы. */
 export function serviceFromPath(pathname?: string): AnalyticsService {

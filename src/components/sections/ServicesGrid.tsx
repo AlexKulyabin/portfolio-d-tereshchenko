@@ -13,7 +13,7 @@ export function ServicesGrid() {
   const { servicesIntro } = content.home
 
   return (
-    <Section id="uslugi" tone="light">
+    <Section id="uslugi" analyticsId="services" tone="light">
       <Container>
         <SectionHeader
           eyebrow="Услуги"

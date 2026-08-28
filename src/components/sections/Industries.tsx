@@ -9,7 +9,7 @@ export function Industries() {
   if (industries.items.length === 0) return null
 
   return (
-    <Section tone="dark" className="relative overflow-hidden">
+    <Section analyticsId="industries" tone="dark" className="relative overflow-hidden">
       <div aria-hidden="true" className="absolute inset-0 bg-grid-overlay opacity-50" />
       <Container className="relative">
         <SectionHeader

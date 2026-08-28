@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+import { useSectionView } from '@/lib/useSectionView'
+import type { AnalyticsSection } from '@/lib/metrika'
 import { Reveal } from './Reveal'
 
 export function Container({ children, className }: { children: ReactNode; className?: string }) {
@@ -10,11 +12,14 @@ type SectionProps = {
   children: ReactNode
   className?: string
   id?: string
+  /** Стабильное имя секции для цели section_view в Метрике. */
+  analyticsId?: AnalyticsSection
   /** Тёмная секция — светлый текст на синем градиенте */
   tone?: 'light' | 'soft' | 'dark'
 }
 
-export function Section({ children, className, id, tone = 'light' }: SectionProps) {
+export function Section({ children, className, id, analyticsId, tone = 'light' }: SectionProps) {
+  const analyticsRef = useSectionView(analyticsId)
   const tones = {
     light: 'bg-white text-ink-900',
     soft: 'bg-surface text-ink-900',
@@ -22,7 +27,11 @@ export function Section({ children, className, id, tone = 'light' }: SectionProp
   }
 
   return (
-    <section id={id} className={cn('py-20 sm:py-24 lg:py-28', tones[tone], className)}>
+    <section
+      ref={analyticsRef}
+      id={id}
+      className={cn('py-20 sm:py-24 lg:py-28', tones[tone], className)}
+    >
       {children}
     </section>
   )

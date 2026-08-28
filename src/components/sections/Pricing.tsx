@@ -19,7 +19,7 @@ export function Pricing({ service }: { service: Service }) {
   const copy = serviceSeoCopy[service.slug]
 
   return (
-    <Section id="stoimost" tone="soft">
+    <Section id="stoimost" analyticsId="pricing" tone="soft">
       <Container>
         <SectionHeader
           eyebrow="Стоимость"

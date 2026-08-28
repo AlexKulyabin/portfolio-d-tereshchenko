@@ -13,7 +13,12 @@ export function CtaSection({ defaultService }: { defaultService?: string }) {
   const phoneLink = telHref(contacts.phoneRaw, contacts.phone)
 
   return (
-    <Section id="zayavka" tone="dark" className="relative overflow-hidden">
+    <Section
+      id="zayavka"
+      analyticsId="lead_form"
+      tone="dark"
+      className="relative overflow-hidden"
+    >
       <div aria-hidden="true" className="absolute inset-0 bg-grid-overlay opacity-40" />
       <Container className="relative">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">

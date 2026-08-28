@@ -84,7 +84,7 @@ export default function ContactsPage() {
         </Container>
       </div>
 
-      <Section tone="light">
+      <Section analyticsId="contacts" tone="light">
         <Container>
           {items.length > 0 ? (
             <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
