@@ -35,7 +35,8 @@ service cloud.firestore {
       // Поле service читается как data['service']: слово service
       // зарезервировано языком правил, и через точку не разбирается.
       // Условие consent == true означает, что без подтверждённого
-      // согласия заявка в базу не попадёт.
+      // согласия заявка в базу не попадёт. Версия должна совпадать с
+      // PERSONAL_DATA_CONSENT_VERSION в src/lib/legal.ts.
       function isValidLead() {
         let data = request.resource.data;
         return data.keys().hasOnly([
@@ -48,7 +49,7 @@ service cloud.firestore {
                && data.message is string && data.message.size() <= 2000
                && data['service'] is string && data['service'].size() <= 120
                && data.consent == true
-               && data.consentVersion == '2026-08-20'
+               && data.consentVersion == '2026-08-28'
                && data.status == 'new';
       }
     }
