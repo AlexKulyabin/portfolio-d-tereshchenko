@@ -11,7 +11,7 @@ export function WhySection({ service }: { service: Service }) {
   if (!why.body && why.legalRefs.length === 0) return null
 
   return (
-    <Section analyticsId="why" tone="light">
+    <Section id="zachem-nuzhno" analyticsId="why" tone="light">
       <Container>
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
@@ -73,7 +73,7 @@ export function IncludedSection({ service }: { service: Service }) {
   const copy = serviceSeoCopy[service.slug]
 
   return (
-    <Section analyticsId="included" tone="soft">
+    <Section id="sostav-rabot" analyticsId="included" tone="soft">
       <Container>
         <SectionHeader
           eyebrow="Состав работ"
@@ -111,7 +111,7 @@ export function DeliverablesSection({ service }: { service: Service }) {
   const copy = serviceSeoCopy[service.slug]
 
   return (
-    <Section analyticsId="deliverables" tone="light">
+    <Section id="dokumenty" analyticsId="deliverables" tone="light">
       <Container>
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-5">
@@ -161,7 +161,7 @@ export function TermsSection({ service }: { service: Service }) {
   const copy = serviceSeoCopy[service.slug]
 
   return (
-    <Section analyticsId="terms" tone="dark" className="relative overflow-hidden">
+    <Section id="sroki" analyticsId="terms" tone="dark" className="relative overflow-hidden">
       <div aria-hidden="true" className="absolute inset-0 bg-grid-overlay opacity-40" />
       <Container className="relative">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">

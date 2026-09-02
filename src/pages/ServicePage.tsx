@@ -51,7 +51,7 @@ export default function ServicePage() {
         jsonLd={schemas}
       />
 
-      <div className="relative overflow-hidden bg-hero-gradient text-white">
+      <section id="ob-usluge" className="relative overflow-hidden bg-hero-gradient text-white">
         <div aria-hidden="true" className="absolute inset-0 bg-grid-overlay" />
         <Container className="relative">
           <nav aria-label="Хлебные крошки" className="pt-8">
@@ -131,7 +131,7 @@ export default function ServicePage() {
             </div>
           </div>
         </Container>
-      </div>
+      </section>
 
       <WhySection service={service} />
       <IncludedSection service={service} />

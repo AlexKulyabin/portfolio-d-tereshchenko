@@ -9,7 +9,7 @@ export function Steps() {
   if (steps.items.length === 0) return null
 
   return (
-    <Section analyticsId="steps" tone="light">
+    <Section id="etapy-raboty" analyticsId="steps" tone="light">
       <Container>
         <SectionHeader
           eyebrow="Процесс"

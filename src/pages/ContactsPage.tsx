@@ -74,7 +74,7 @@ export default function ContactsPage() {
         ]}
       />
 
-      <div className="bg-hero-gradient py-16 text-white sm:py-20">
+      <section id="kontakty" className="bg-hero-gradient py-16 text-white sm:py-20">
         <Container>
           <h1 className="text-4xl sm:text-5xl">Контакты</h1>
           <p className="mt-5 max-w-2xl text-lg text-white/70">
@@ -82,9 +82,9 @@ export default function ContactsPage() {
             после короткого разговора.
           </p>
         </Container>
-      </div>
+      </section>
 
-      <Section analyticsId="contacts" tone="light">
+      <Section id="svyaz-i-rekvizity" analyticsId="contacts" tone="light">
         <Container>
           {items.length > 0 ? (
             <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

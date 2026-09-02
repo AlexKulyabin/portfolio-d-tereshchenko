@@ -18,7 +18,7 @@ export function Hero() {
   const phoneLink = telHref(contacts.phoneRaw, contacts.phone)
 
   return (
-    <div className="relative overflow-hidden bg-hero-gradient text-white">
+    <section id="nachalo" className="relative overflow-hidden bg-hero-gradient text-white">
       <div aria-hidden="true" className="absolute inset-0 bg-grid-overlay" />
 
       <Container className="relative">
@@ -83,6 +83,6 @@ export function Hero() {
           )}
         </div>
       </Container>
-    </div>
+    </section>
   )
 }

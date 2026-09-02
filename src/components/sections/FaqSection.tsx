@@ -15,7 +15,7 @@ export function FaqSection({
   if (items.length === 0) return null
 
   return (
-    <Section analyticsId="faq" tone={tone}>
+    <Section id="voprosy" analyticsId="faq" tone={tone}>
       <Container>
         <SectionHeader eyebrow="Вопросы и ответы" title={title} align="center" />
         <div className="mx-auto mt-12 max-w-3xl">

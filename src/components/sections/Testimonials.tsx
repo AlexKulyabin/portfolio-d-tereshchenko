@@ -12,7 +12,7 @@ export function Testimonials() {
   if (verifiedItems.length === 0) return null
 
   return (
-    <Section analyticsId="testimonials" tone="soft">
+    <Section id="otzyvy" analyticsId="testimonials" tone="soft">
       <Container>
         <SectionHeader eyebrow="Отзывы" title={testimonials.title || 'Что говорят клиенты'} />
 
