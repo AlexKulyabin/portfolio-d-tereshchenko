@@ -1,11 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2563EB"/>
-      <stop offset="100%" stop-color="#0B2545"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="url(#g)"/>
-  <path d="M32 14l14 6v11c0 9-6 16.5-14 19-8-2.5-14-10-14-19V20l14-6z" fill="none" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/>
-  <path d="M25 33l5 5 10-11" fill="none" stroke="#38BDF8" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="ИП Терещенко Д.С.">
+  <rect width="120" height="120" rx="28" fill="#F8FAFC"/>
+  <path d="M60 12 96 25v29c0 24-14.7 43.3-36 53C38.7 97.3 24 78 24 54V25L60 12Z" fill="#FFF" stroke="#3D4676" stroke-linejoin="round" stroke-width="8"/>
+  <path d="M60 35v43M38 50h44M60 35l-5 7h10l-5-7Z" fill="#3D4676" stroke="#3D4676" stroke-linejoin="round" stroke-width="2"/>
+  <path d="m40 51-9 19m9-19 9 19M31 70h18M80 51l-9 19m9-19 9 19M71 70h18" fill="none" stroke="#2563EB" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+  <path d="M52 82h16" fill="none" stroke="#3D4676" stroke-linecap="round" stroke-width="7"/>
 </svg>
