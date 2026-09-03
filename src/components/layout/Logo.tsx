@@ -3,28 +3,26 @@ import { useContent } from '@/lib/ContentProvider'
 import { cn } from '@/lib/utils'
 
 /**
- * Текстовый знак: инициалы в синем квадрате плюс подпись.
- * Пока у заказчика нет логотипа — это аккуратный нейтральный вариант,
- * который не выглядит как заглушка.
+ * Знак в шапке: favicon создана из предоставленного логотипа.
+ * Один и тот же знак используется и в браузере, и рядом с названием сайта.
  */
 export function Logo({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
   const { expert } = useContent()
-
-  const initials =
-    expert.name
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase() ?? '')
-      .join('') || 'ДТ'
 
   return (
     <Link to="/" className="group flex items-center gap-3" aria-label="На главную">
       <span
         aria-hidden="true"
-        className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-brand-600 to-navy-900 font-display text-base font-bold text-white shadow-[0_6px_18px_-8px_rgba(29,78,216,0.8)]"
+        className="flex size-11 shrink-0 overflow-hidden rounded-xl bg-white shadow-[0_6px_18px_-8px_rgba(29,78,216,0.45)] ring-1 ring-navy-900/10"
       >
-        {initials}
+        <img
+          src="/favicon-120.png"
+          alt=""
+          width={120}
+          height={120}
+          decoding="async"
+          className="size-full object-cover"
+        />
       </span>
       <span className="flex flex-col leading-tight">
         <span
