@@ -16,7 +16,7 @@ export function Logo({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
         className="flex size-11 shrink-0 overflow-hidden rounded-xl bg-white shadow-[0_6px_18px_-8px_rgba(29,78,216,0.45)] ring-1 ring-navy-900/10"
       >
         <img
-          src="/favicon-120.png"
+          src="/header-logo.png"
           alt=""
           width={120}
           height={120}
